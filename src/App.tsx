@@ -19,6 +19,9 @@ import ParticleBackground from './components/ParticleBackground'
 import CustomCursor from './components/CustomCursor'
 import PageTransition from './components/PageTransition'
 import ChatIA from './components/ChatIA'
+import ToastNotification from './components/ToastNotification'
+import BotonCompartir from './components/BotonCompartir'
+
 
 function Inner({
   mostrarIntro,
@@ -27,6 +30,8 @@ function Inner({
   setParticulasActivas,
   cursorActivo,
   setCursorActivo,
+  modoClaro,
+  setModoClaro,
 }: {
   mostrarIntro: boolean
   terminarIntro: () => void
@@ -34,6 +39,8 @@ function Inner({
   setParticulasActivas: (v: boolean) => void
   cursorActivo: boolean
   setCursorActivo: (v: boolean) => void
+  modoClaro: boolean
+  setModoClaro: (v: boolean) => void
 }) {
   const { pathname } = useLocation()
   const esPresentacion = pathname === '/presentacion'
@@ -44,6 +51,8 @@ function Inner({
       {mostrarIntro && !esPresentacion && <Intro onTerminado={terminarIntro} />}
       {particulasActivas && !esPresentacion && <ParticleBackground />}
       {!esPresentacion && <ChatIA />}
+      {!esPresentacion && <BotonCompartir />}
+      {!esPresentacion && <ToastNotification />}
 
       {!esPresentacion && (
         <Navbar
@@ -51,24 +60,26 @@ function Inner({
           setParticulasActivas={setParticulasActivas}
           cursorActivo={cursorActivo}
           setCursorActivo={setCursorActivo}
+          modoClaro={modoClaro}
+          setModoClaro={setModoClaro}
         />
       )}
 
       <PageTransition>
         <Routes>
-          <Route path="/"             element={<Home />} />
-          <Route path="/filosofia"    element={<Filosofia />} />
-          <Route path="/bostrom"      element={<Bostrom />} />
-          <Route path="/ciencia"      element={<Ciencia />} />
-          <Route path="/grinberg"     element={<Grinberg />} />
-          <Route path="/debate"       element={<Debate />} />
-          <Route path="/quiz"         element={<Quiz />} />
+          <Route path="/" element={<Home />} />
+          <Route path="/filosofia" element={<Filosofia />} />
+          <Route path="/bostrom" element={<Bostrom />} />
+          <Route path="/ciencia" element={<Ciencia />} />
+          <Route path="/grinberg" element={<Grinberg />} />
+          <Route path="/debate" element={<Debate />} />
+          <Route path="/quiz" element={<Quiz />} />
           <Route path="/presentacion" element={<Presentacion />} />
-          <Route path="/encuesta"     element={<Encuesta />} />
+          <Route path="/encuesta" element={<Encuesta />} />
           <Route path="/estadisticas" element={<Estadisticas />} />
-          <Route path="/proyecto"     element={<Proyecto />} />
-          <Route path="/kahoot"       element={<Kahoot />} />
-          <Route path="/equipo"       element={<Equipo />} />
+          <Route path="/proyecto" element={<Proyecto />} />
+          <Route path="/kahoot" element={<Kahoot />} />
+          <Route path="/equipo" element={<Equipo />} />
         </Routes>
       </PageTransition>
     </>
@@ -79,6 +90,9 @@ export default function App() {
   const [mostrarIntro, setMostrarIntro] = useState(true)
   const [particulasActivas, setParticulasActivas] = useState(true)
   const [cursorActivo, setCursorActivo] = useState(true)
+
+  // ✅ LO QUE TE FALTABA
+  const [modoClaro, setModoClaro] = useState(false)
 
   useEffect(() => {
     const visto = sessionStorage.getItem('introVista')
@@ -92,7 +106,7 @@ export default function App() {
 
   return (
     <BrowserRouter>
-      <div className="min-h-screen bg-neutral-950 text-white">
+      <div className={`min-h-screen ${modoClaro ? 'bg-white text-black' : 'bg-neutral-950 text-white'}`}>
         <Inner
           mostrarIntro={mostrarIntro}
           terminarIntro={terminarIntro}
@@ -100,6 +114,8 @@ export default function App() {
           setParticulasActivas={setParticulasActivas}
           cursorActivo={cursorActivo}
           setCursorActivo={setCursorActivo}
+          modoClaro={modoClaro}              // ✅ agregado
+          setModoClaro={setModoClaro}        // ✅ agregado
         />
       </div>
     </BrowserRouter>
